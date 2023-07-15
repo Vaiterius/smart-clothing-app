@@ -4,9 +4,14 @@
 - Download Expo Go app on your mobile device.
 To start application: 
     - cd SmartClothingApp
+    - npm install
+    - npm install @react-navigation/native
+    - npx expo install react-native-screens react-native-safe-area-context
+    - npm install @react-navigation/bottom-tabs
     - npx expo start
 # Resorces
  Expo Doc link: https://docs.expo.dev/get-started/installation/
+ React Bootstrap doc: https://react-bootstrap.netlify.app/docs/getting-started/introduction
 
 # Developing Etiquette
 - Stable branch will be used to store the most stable version of the application. This branch must have a functioning and running appliction all the times. 
