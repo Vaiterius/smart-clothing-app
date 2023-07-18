@@ -10,6 +10,8 @@ import { AppTheme } from "./src/constants/themes";
 
 import configureStore from "./src/store";
 
+import { HexoLogin } from "./src/services/hexoskinAuth";
+
 const store = configureStore();
 
 export default function App() {
@@ -29,6 +31,8 @@ export default function App() {
           <StoreProvider store={store}>
             <PaperProvider theme={AppTheme}>
               <NavigationContainer>
+                <HexoLogin />
+
                 <AppRouter />
               </NavigationContainer>
             </PaperProvider>
