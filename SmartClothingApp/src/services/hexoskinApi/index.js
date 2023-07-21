@@ -35,7 +35,7 @@ async function connectToHexoskin() {
   })
   .then(data => {
     if (data.error) {
-      console.error('Failed to connect to Hexoskin:', data.error);
+      console.error('Failed to connect to Hexoskin: ', data.error);
     } else {
       console.log('Successfully connected to Hexoskin:', data);
     }
