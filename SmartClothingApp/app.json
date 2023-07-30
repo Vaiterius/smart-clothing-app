@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "com.arcs.smartclothingapp",
+    "scheme": "smartclothingapp",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

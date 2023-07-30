@@ -1,85 +1,51 @@
 import * as React from "react";
-import { Button, View } from "react-native";
-import * as WebBrowser from "expo-web-browser";
-import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import { Button, View, Linking } from "react-native";
 
-import { HEXO_CLIENT_ID } from "@env";
-
-WebBrowser.maybeCompleteAuthSession();
-
-// Endpoint
-const discovery = {
-  authorizationEndpoint: "https://api.hexoskin.com/oauth2/auth/",
-  tokenEndpoint: "https://api.hexoskin.com/oauth2/token/",
-};
-
-async function getAccessTokenWithAuthorizationCode(authCode) {
-  const response = await fetch("https://api.hexoskin.com/oauth2/token/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-    },
-    body: `grant_type=authorization_code&code=${authCode}&client_id=${HEXO_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-      makeRedirectUri({
-        native: "https://auth.expo.io/@arcs/SmartClothingApp",
-      })
-    )}`,
-  });
-  console.log(response);
-  if (response.ok) {
-    const data = await response.json();
-    return data.access_token;
-  } else {
-    throw new Error(`Failed to get access token: ${response.statusText}`);
-  }
-}
+import { HEXO_CLIENT_ID, HEXO_SCOPE } from "@env";
 
 export function HexoLogin() {
-  const state = Math.random().toString(36).substring(7); // Generate a unique state string
-  const uri = makeRedirectUri({
-    native: "https://auth.expo.io/@arcs/SmartClothingApp",
-  });
+  const state = React.useRef(Math.random().toString(36).substring(7)).current; // Generate a unique state string
 
-  const [request, response, promptAsync] = useAuthRequest(
-    {
-      clientId: HEXO_CLIENT_ID,
-      redirectUri: uri,
-      responseType: "code",
-      scopes: [], // Specify the permissions you need
-      state: state,
-      // usePKCE: true, // This tells `expo-auth-session` to use PKCE
-      
-    },
-    discovery
-  );
+  const authorize = () => {
+    const redirectUri = encodeURIComponent(
+      "https://auth.expo.io/@arcs/SmartClothingApp"
+    );
+    const url = `https://api.hexoskin.com/api/connect/oauth2/auth/?response_type=token&client_id=${HEXO_CLIENT_ID}&redirect_uri=${redirectUri}&state=${state}`;
 
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open the browser:", err)
+    );
+  };
 
   React.useEffect(() => {
-    console.log(response, "useeffect");
-    if (response?.type === "success") {
-      const { code } = response.params;
-      // Now you have the authorization code, you can use this code to request the access token
-      getAccessTokenWithAuthorizationCode(code)
-        .then((token) => {
-          console.log("Access token:", token);
-        })
-        .catch((error) => {
-          console.error("Failed to get access token:", error);
-        });
-    }
-  }, [response]);
+    const handleUrl = (event) => {
+      console.log("Handling URL:", event.url); // Log the entire URL
+
+      const { url } = event;
+      const fragment = url.split("#")[1];
+      const params = new URLSearchParams(fragment);
+
+      const accessToken = params.get("access_token");
+
+      console.log("Access token:", accessToken); // Log the extracted access token
+
+      if (accessToken) {
+        console.log("Access token:", accessToken);
+      } else {
+        console.error("Failed to get access token.");
+      }
+    };
+
+    Linking.addEventListener("url", handleUrl);
+
+    return () => {
+      Linking.removeEventListener("url", handleUrl);
+    };
+  }, []);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button
-        disabled={!request}
-        title="Login"
-        onPress={() => {
-          promptAsync().then((response) => {
-            console.log(response, "button"); // Log the response here
-          });
-        }}
-      />
+      <Button title="Login" onPress={authorize} />
     </View>
   );
 }

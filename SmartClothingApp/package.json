@@ -35,7 +35,8 @@
     "react-native-web": "~0.18.10",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
-    "expo-auth-session": "~4.0.3"
+    "expo-auth-session": "~4.0.3",
+    "expo-updates": "~0.16.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
