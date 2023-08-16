@@ -27,12 +27,12 @@ export default function App() {
 
   return (
     <>
+    <HexoLogin />
       {!isLoading && (
         <SafeAreaView style={{ flex: 1 }}>
           <StoreProvider store={store}>
             <PaperProvider theme={AppTheme}>
               <NavigationContainer>
-                <HexoLogin />
                 <AppRouter />
               </NavigationContainer>
             </PaperProvider>
