@@ -32,6 +32,17 @@
         "projectId": "2fd377bc-4100-45de-b595-5667519caf3d"
       }
     },
-    "owner": "arcs"
+    "owner": "arcs",
+    "plugins": [
+      [
+      "react-native-health",
+        {
+          "isClinicalDataEnabled": true,
+          "healthSharePermission": "Custom health share permission",
+          "healthUpdatePermission": "Custom health update permission",
+          "healthClinicalDescription": "Custom health share permission for clinical data"
+        }
+      ]
+    ]
   }
 }
