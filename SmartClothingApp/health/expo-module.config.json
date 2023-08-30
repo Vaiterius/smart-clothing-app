@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android", "web"],
+  "ios": {
+    "modules": ["ReactNativeHealthModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.health.ReactNativeHealthModule"]
+  }
+}
