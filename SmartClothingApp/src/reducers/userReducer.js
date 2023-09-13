@@ -7,7 +7,8 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  uuid: null,
+  //To skip login/sign up page, change from null to true
+  uuid: true,
   firstName: null,
   lastName: null,
   email: null,
