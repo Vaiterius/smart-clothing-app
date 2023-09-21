@@ -18,6 +18,7 @@ export default function HomeScreen({ navigation }) {
       <AppHeader title={"Dashboard"} />
       <View style={styles.body}>
         <Text style={AppStyle.title}>Hello, {firstName}</Text>
+        <Text style={AppStyle.title}>Hello World</Text>
         <View style={styles.insights}>
           <Text
             style={[AppStyle.subTitle, { fontFamily: AppFonts.chakraBold }]}
