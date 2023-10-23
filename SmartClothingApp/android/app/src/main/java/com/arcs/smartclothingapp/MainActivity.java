@@ -2,15 +2,25 @@ package com.arcs.smartclothingapp;
 
 import android.os.Build;
 import android.os.Bundle;
-
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
-
 import expo.modules.ReactActivityDelegateWrapper;
 
 public class MainActivity extends ReactActivity {
+  // Request codes for permission requests
+  private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 1;
+  private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 2;
+  private static final int SYSTEM_ALERT_WINDOW_REQUEST_CODE = 3;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     // Set the theme to AppTheme BEFORE onCreate to support 
@@ -18,6 +28,18 @@ public class MainActivity extends ReactActivity {
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null);
+
+    // Check for READ_EXTERNAL_STORAGE permission
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        // Request the permission
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_REQUEST_CODE);
+    }
+
+    // Check for WRITE_EXTERNAL_STORAGE permission
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        // Request the permission
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+    }
   }
 
   /**
@@ -64,5 +86,25 @@ public class MainActivity extends ReactActivity {
     // Use the default back button implementation on Android S
     // because it's doing more than {@link Activity#moveTaskToBack} in fact.
     super.invokeDefaultOnBackPressed();
+  }
+
+  // Handle the result of permission requests
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+      super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+      if (requestCode == READ_EXTERNAL_STORAGE_REQUEST_CODE) {
+          if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+              // Permission granted, you can now access external storage for reading.
+          } else {
+              // Permission denied, handle accordingly.
+          }
+      } else if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
+          if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+              // Permission granted, you can now access external storage for writing.
+          } else {
+              // Permission denied, handle accordingly.
+          }
+      }
   }
 }
