@@ -216,6 +216,8 @@ export const startSignupWithEmail = (email, password, firstName, lastName) => {
 };
 
 export const startLoginWithEmail = (email, password) => {
+  console.log(email)
+  console.log(password)
   return (dispatch) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -223,8 +225,8 @@ export const startLoginWithEmail = (email, password) => {
 
         storeUID(user.uid); // store the user UID securely in local storages
 
-        // console.log("Logged in successfully!");
-        // console.log(user);
+        console.log("Logged in successfully!");
+        console.log(user);
 
         // load the user data from the database
         dispatch(startLoadUserData());
