@@ -16,7 +16,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.health.connect.client.HealthConnectClient;
 import androidx.health.connect.client.PermissionController;
-import androidx.health.connect.client.request.HeartRateRecord;
 
 import java.util.Set;
 
@@ -49,6 +48,7 @@ public class PermissionsRationaleActivity extends Activity {
         }
         HealthConnectClient healthClient = HealthConnectClient.getOrCreate(PermissionsRationaleActivity.this);
 
+        Set<String> granted = permissionController.getGrantedPermissions()
         ActivityResultContract<Set<String>, Set<String>> requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract();
         int requestPermissions = registerForActivityResult(requestPermissionActivityContract) {
             granted ->
@@ -72,7 +72,7 @@ public class PermissionsRationaleActivity extends Activity {
     }
 
     private void checkPermissionsAndRun(HealthConnectClient healthConnectClient) {
-        int granted = healthConnectClient.permissionController.get
+        int granted = PermissionController.getgrantedpermissions()
     }
 
     @Override
