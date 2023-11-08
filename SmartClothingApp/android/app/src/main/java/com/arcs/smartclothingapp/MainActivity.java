@@ -4,22 +4,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.content.Intent;
-import android.net.Uri;
-import android.provider.Settings;
+
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.health.connect.client.PermissionController;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+
+import java.util.Set;
+
 import expo.modules.ReactActivityDelegateWrapper;
 
 public class MainActivity extends ReactActivity {
   // Request codes for permission requests
-  private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 1;
-  private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 2;
+  private static final int READ_EXTERNAL_STORAGE_REQUEST_CODE = 2;
+  private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 5;
   private static final int SYSTEM_ALERT_WINDOW_REQUEST_CODE = 3;
+
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

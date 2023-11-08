@@ -2,4 +2,15 @@
   <string name="app_name">SmartClothingApp</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
+  <string name="requirement_string">
+    This app requires the use of bluetooth devices such as the Hexoskin smart shirt, smart socks, and smart watches. We will need access to your personal health data, including your heart rate, VO2,
+    step count, and other associated workout health data. We will pull the data from the health device to the phone for visualization, and from the phone to our servers for processing. If knowing
+    this you want to use our app, please press the accept permissions button. If not, press the deny button.
+  </string>
+  <string name="step_count_denied">Step count permission denied.</string>
+  <string name="step_count_granted">Step count permission granted.</string>
+  <string name="heart_rate_denied">Heart rate permission denied.</string>
+  <string name="heart_rate_granted">Heart rate permission granted.</string>
+  <string name="accept_terms">Accept Terms</string>
+  <string name="deny_terms">Deny Terms</string>
 </resources>

@@ -1,9 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.arcs.smartclothingapp">
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-  <uses-permission android:name="android.permission.VIBRATE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>               <!--1-->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>  <!--2-->
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>    <!--3-->
+  <uses-permission android:name="android.permission.VIBRATE"/>                <!--4-->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!--5-->
+  <!--Google Health Connect Integrations-->
+  <uses-permission android:name="android.permission.health.READ_HEART_RATE"/> <!--6-->
+  <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/><!--7-->
+  <uses-permission android:name="android.permission.health.READ_STEPS"/>      <!--8-->
+  <uses-permission android:name="android.permission.health.WRITE_STEPS"/>     <!--9-->
   <queries>
     <intent>
       <action android:name="android.intent.action.VIEW"/>
@@ -30,6 +35,19 @@
         <data android:scheme="com.arcs.smartclothingapp"/>
       </intent-filter>
     </activity>
+
+    <activity
+        android:name=".PermissionsRationaleActivity"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+      </intent-filter>
+    </activity>
+
+
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
   </application>
+  <queries>
+    <package android:name="com.google.android.apps.healthdata" />
+  </queries>
 </manifest>
