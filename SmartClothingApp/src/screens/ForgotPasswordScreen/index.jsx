@@ -1,13 +1,37 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { horizontalScale, verticalScale } from "../../utils/scale";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { HeroSection } from "../../components";
 import { AppColor, AppStyle } from "../../constants/themes";
+
+import { startSnedPasswordReserEmail } from "../../actions/userActions.js";
+
 const ForgotPasswordScreen = ({ navigation }) => {
   const [user, setUser] = useState({
     email: "",
   });
+  const [error, setError] = useState({
+    email: "",
+  });
+  const isValid = () => {
+    let flag = true;
+    let errors = error;
+    if (user.email.length < 1 || !user.email.includes("@")) {
+      errors.email = "Enter valid email";
+      flag = false;
+    }
+    setError({ ...errors });
+    return flag;
+  };
+  const onResetPasssword = () => {
+    if (!isValid()) {
+      console.log("Invalid user info!");
+      return;
+    }
+
+    startSnedPasswordReserEmail(user.email);
+  };
 
   return (
     <ScrollView>
@@ -25,22 +49,35 @@ const ForgotPasswordScreen = ({ navigation }) => {
         >
           Enter the registered Email ID
         </Text>
-        <TextInput
-          label="email"
-          value={user.email}
-          mode="outlined"
-          onChangeText={(text) => setUser({ ...user, email: text })}
-        />
+        <View>
+          <TextInput
+            label="email"
+            value={user.email}
+            mode="outlined"
+            onChangeText={(text) => {
+              setUser({ ...user, email: text });
+              setError({ ...error, email: "" });
+            }}
+            error={error.email.length > 1}
+          />
+          <HelperText type="error" visible={error.email.length > 0}>
+            Please enter valid Email!
+          </HelperText>
+        </View>
         <View style={styles.btnContainer}>
           <Button
             mode="outlined"
+            onPress={() => {
+              setUser({ email: "" });
+            }}
             style={{ flex: 1, marginHorizontal: horizontalScale(10) }}
           >
-            Cancel
+            Clear
           </Button>
           <Button
             mode="elevated"
             style={{ flex: 2, marginHorizontal: horizontalScale(10) }}
+            onPress={onResetPasssword}
           >
             Send reset link
           </Button>
@@ -62,14 +99,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   content: {
     backgroundColor: AppColor.background,
-    paddingHorizontal: horizontalScale(20),
-    borderTopLeftRadius: horizontalScale(25),
-    borderTopRightRadius: horizontalScale(25),
-    transform: [{ translateY: verticalScale(-25) }],
-    paddingTop: verticalScale(25),
+    paddingHorizontal: 20,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    transform: [{ translateY: -25 }],
+    paddingTop: 25,
   },
   btnContainer: {
-    marginVertical: verticalScale(10),
+    marginVertical: 10,
     flexDirection: "row",
   },
 });

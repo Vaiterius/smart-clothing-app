@@ -3,9 +3,11 @@
     "name": "SmartClothingApp",
     "slug": "SmartClothingApp",
     "version": "1.0.0",
+    "owner": "arcs",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "com.arcs.smartclothingapp",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -15,9 +17,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.arcs.smartclothingapp"
     },
     "android": {
+      "package": "com.arcs.smartclothingapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -25,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2fd377bc-4100-45de-b595-5667519caf3d"
+      }
     }
   }
 }
