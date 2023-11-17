@@ -1,0 +1,11 @@
+Possible Problems and Their Solutions
+
+Java Files and Other Generated Code Covered in Red?
+1) Go to File Edit View bar, click Build
+2) The bottom option "rebuild project" click it
+3) likely solved
+
+Cannot Read Script PATH\scripts\autolinking.gradle as it does not Exist
+1) cd PATH\smart-clothing-app\SmartClothingApp
+2) npm install (maybe npm update after)
+3) likely solved
