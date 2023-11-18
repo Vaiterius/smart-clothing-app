@@ -8,6 +8,20 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "com.arcs.smartclothingapp",
+    "plugins": [
+      "react-native-health-connect",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "33.0.0",
+            "minSdkVersion": 26
+          }
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
