@@ -194,6 +194,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.health.connect:connect-client:1.0.0-alpha11"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0"   // suggested add
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
