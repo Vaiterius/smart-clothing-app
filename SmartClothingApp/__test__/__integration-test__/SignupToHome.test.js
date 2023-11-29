@@ -104,6 +104,12 @@ jest.mock('firebase/firestore', () => ({
       }), // Mock 'data' as a function
     }),
 }))
+
+jest.mock('react-native-vector-icons/MaterialIcons', () => require('../__mocks__/react-native-vector-icons').MaterialIcons);
+jest.mock('react-native-vector-icons/FontAwesome5', () => require('../__mocks__/react-native-vector-icons').FontAwesome5);
+jest.mock('@shopify/react-native-skia', () => require('../__mocks__/@shopify__react-native-skia'));
+
+
   
   
   

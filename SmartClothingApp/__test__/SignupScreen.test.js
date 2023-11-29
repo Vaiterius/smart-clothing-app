@@ -25,6 +25,10 @@ jest.mock('react-redux', () => ({
     setAuthError: jest.fn(),
 }));
 
+
+jest.mock('react-native-vector-icons/MaterialIcons', () => require('./__mocks__/react-native-vector-icons').MaterialIcons);
+jest.mock('react-native-vector-icons/FontAwesome5', () => require('./__mocks__/react-native-vector-icons').FontAwesome5);
+
   
 
 // Test Suite - "Empty Pass" alert never shows up && HelperText always display errors in test (visibile=false when running APP)

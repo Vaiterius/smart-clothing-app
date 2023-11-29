@@ -201,7 +201,6 @@ exports[`SettingsScreen renders correctly 1`] = `
             <RNSScreen
               activityState={2}
               collapsable={false}
-              forwardedRef={[Function]}
               gestureResponseDistance={
                 {
                   "bottom": -1,
@@ -211,6 +210,11 @@ exports[`SettingsScreen renders correctly 1`] = `
                 }
               }
               pointerEvents="box-none"
+              sheetAllowedDetents="large"
+              sheetCornerRadius={-1}
+              sheetExpandsWhenScrolledToEdge={true}
+              sheetGrabberVisible={false}
+              sheetLargestUndimmedDetent="all"
               style={
                 {
                   "bottom": 0,
@@ -294,7 +298,6 @@ exports[`SettingsScreen renders correctly 1`] = `
                 >
                   <View
                     collapsable={false}
-                    forwardedRef={[Function]}
                     handlerTag={1}
                     handlerType="PanGestureHandler"
                     needsOffscreenAlphaCompositing={false}
@@ -622,13 +625,6 @@ exports[`SettingsScreen renders correctly 1`] = `
                                       style={
                                         [
                                           {
-                                            "fontFamily": "System",
-                                            "fontSize": 22,
-                                            "fontWeight": "400",
-                                            "letterSpacing": 0,
-                                            "lineHeight": 28,
-                                          },
-                                          {
                                             "textAlign": "left",
                                           },
                                           {
@@ -637,17 +633,26 @@ exports[`SettingsScreen renders correctly 1`] = `
                                           },
                                           [
                                             {
-                                              "color": "rgba(28, 27, 31, 1)",
                                               "fontFamily": "System",
                                               "fontSize": 22,
                                               "fontWeight": "400",
                                               "letterSpacing": 0,
                                               "lineHeight": 28,
                                             },
-                                            false,
-                                            {
-                                              "fontFamily": "ChakraPetch_BoldItalic",
-                                            },
+                                            [
+                                              {
+                                                "color": "rgba(28, 27, 31, 1)",
+                                                "fontFamily": "System",
+                                                "fontSize": 22,
+                                                "fontWeight": "400",
+                                                "letterSpacing": 0,
+                                                "lineHeight": 28,
+                                              },
+                                              false,
+                                              {
+                                                "fontFamily": "ChakraPetch_BoldItalic",
+                                              },
+                                            ],
                                           ],
                                         ]
                                       }

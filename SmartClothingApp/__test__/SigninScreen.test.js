@@ -40,6 +40,12 @@ jest.mock('../src/actions/userActions.js', () => ({
 
 
 
+jest.mock('react-native-vector-icons/MaterialIcons', () => require('./__mocks__/react-native-vector-icons').MaterialIcons);
+jest.mock('react-native-vector-icons/FontAwesome5', () => require('./__mocks__/react-native-vector-icons').FontAwesome5);
+
+
+
+
 // Test Suite
 describe('SigninScreen Error Alerts', () => {
   // renders SigninScreen with mock navigation prop and get instance of component's rendered tree
