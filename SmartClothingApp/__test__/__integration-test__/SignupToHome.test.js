@@ -108,6 +108,18 @@ jest.mock('firebase/firestore', () => ({
 jest.mock('react-native-vector-icons/MaterialIcons', () => require('../__mocks__/react-native-vector-icons').MaterialIcons);
 jest.mock('react-native-vector-icons/FontAwesome5', () => require('../__mocks__/react-native-vector-icons').FontAwesome5);
 jest.mock('@shopify/react-native-skia', () => require('../__mocks__/@shopify__react-native-skia'));
+jest.mock('victory-native', () => {
+  // Mock the specific components and functionalities you use
+  const MockBar = () => <div>Mock Bar</div>;
+  const MockCartesianChart = () => <div>Mock CartesianChart</div>;
+  const MockUseChartPressState = () => ({ /* Mock return value */ });
+
+  return {
+    Bar: MockBar,
+    CartesianChart: MockCartesianChart,
+    useChartPressState: MockUseChartPressState,
+  };
+});
 
 
   
