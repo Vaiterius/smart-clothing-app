@@ -108,6 +108,13 @@ jest.mock('firebase/firestore', () => ({
 jest.mock('react-native-vector-icons/MaterialIcons', () => require('../__mocks__/react-native-vector-icons').MaterialIcons);
 jest.mock('react-native-vector-icons/FontAwesome5', () => require('../__mocks__/react-native-vector-icons').FontAwesome5);
 jest.mock('@shopify/react-native-skia', () => require('../__mocks__/@shopify__react-native-skia'));
+jest.mock('../../src/components/visualizations/ActivityRings/Ring.jsx', () => {
+  return jest.fn(({ ring, center, strokeWidth, scale }) => (
+    <div>
+      Mock Ring Component - {ring.size}, {center.x}, {center.y}, {strokeWidth}, {scale}
+    </div>
+  ));
+});
 jest.mock('victory-native', () => {
   // Mock the specific components and functionalities you use
   const MockBar = () => <div>Mock Bar</div>;
@@ -120,65 +127,14 @@ jest.mock('victory-native', () => {
     useChartPressState: MockUseChartPressState,
   };
 });
-jest.mock('@shopify/react-native-skia', () => {
-  return {
-    Canvas: jest.fn(({ children, style }) => <div style={style}>{children}</div>),
-
-    Fill: jest.fn(() => <div>Mock Fill</div>),
-
-    vec: jest.fn(() => ({ x: 0, y: 0 })),
-
-    Skia: {
-      RuntimeEffect: {
-        Make: jest.fn().mockImplementation(() => ({})),
-      },
-      Path: {
-        Make: jest.fn().mockImplementation(() => ({
-          addCircle: jest.fn(),
-          addArc: jest.fn(),
-        })),
-        MakeFromOp: jest.fn(),
-      },
-      Matrix: jest.fn(() => ({
-        translate: jest.fn(),
-        rotate: jest.fn(),
-      })),
-      PathOp: {
-        Difference: 'Difference',
-      },
-      Color: jest.fn().mockImplementation(color => [color]), // Simplified representation of color
-      XYWHRect: jest.fn().mockImplementation((x, y, width, height) => ({ x, y, width, height })),
-    },
-    Circle: jest.fn(() => <div>Mock Circle</div>),
-    Group: jest.fn(({ children }) => <div>{children}</div>),
-    Path: jest.fn(() => <div>Mock Path</div>),
-    SweepGradient: jest.fn(() => <div>Mock SweepGradient</div>),
-    Shadow: jest.fn(),
-    Shader: jest.fn(() => <div>Mock Shader</div>),
-    DashPathEffect: jest.fn(),
-    useComputedValue: jest.fn(),
-    mixColors: jest.fn((color1, color2) => [color1, color2]), // Simplified mixColors
-  };
-});
-jest.mock('../../src/components/visualizations/ActivityRings/Ring.jsx', () => {
-  return jest.fn(({ ring, center, strokeWidth, scale }) => (
-    <div>
-      Mock Ring Component - {ring.size}, {center.x}, {center.y}, {strokeWidth}, {scale}
-    </div>
-  ));
-});
 jest.mock('../../src/actions/appActions', () => ({
   userMetricsDataModalVisible: jest.fn().mockReturnValue({
     type: 'USER_METRICS_DATA_MODAL_VISIBLE',
     payload: {
       visibility: true,
       isFromSignUpScreen: true,
-}}),
+  }}),
 }));
-// jest.mock('../../src/actions/appActions', () => ({
-//   userMetricsDataModalVisible: jest.fn()
-// }));
-
 // jest.mock('../../src/actions/appActions', () => ({
 //   userMetricsDataModalVisible: jest.fn().mockReturnValue({
 //     visibility: true,
