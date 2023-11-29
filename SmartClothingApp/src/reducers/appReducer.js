@@ -54,6 +54,8 @@ const initialState = {
 };
 
 const appReducer = (state = initialState, action) => {
+  console.log(action.type)
+  console.log(state)
   switch (action.type) {
     case USER_METRICS_DATA_MODAL_VISIBLE:
       console.log(`Making user matricsModalVisible ${action.payload}`);

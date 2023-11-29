@@ -7,6 +7,8 @@ const initialState = {
 };
 
 const toastReducer = (state = initialState, action) => {
+  console.log(action.type)
+  console.log(action.payload)
   switch (action.type) {
     case ToastTypes.SHOW_TOAST:
       return {
