@@ -9,7 +9,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 
-import { storeUID } from "../utils/localStorage.js";
+import { storeUID, storeMetrics } from "../utils/localStorage.js";
 
 import { auth, database } from "../../firebaseConfig.js";
 import { firebaseErrorsMessages } from "../utils/firebaseErrorsMessages.js";
@@ -99,6 +99,7 @@ export const startUpdateProfile = (firstName, lastName) => {
   firstName = firstName.replace(/\s/g, "");
   lastName = lastName.replace(/\s/g, "");
 
+  console.log("startUpdateProfile()")
   return (dispatch) => {
     updateProfile(auth.currentUser, {
       displayName: `${firstName} ${lastName}`,
@@ -106,6 +107,7 @@ export const startUpdateProfile = (firstName, lastName) => {
       .then(() => {
         console.log(auth.currentUser);
         dispatch(updateProfileInfo(firstName, lastName));
+        console.log("updateProfileInfo()")
       })
       .catch((error) => {
         console.log(error);
@@ -135,8 +137,12 @@ export const startUpdateUserData = (userData) => {
       await setDoc(doc(database, "Users", auth.currentUser.uid), userData);
       console.log("User data added to database successfully!");
       dispatch(updateUserMetricsData(userData));
+      // Store the user metrics data in the local storage
+      storeMetrics(userData);
     } catch (e) {
-      console.log("Error adding user data to database!");
+      console.log(
+        "Error adding user data to database! There might be no data to add."
+      );
       console.log(e);
     }
   };
@@ -145,11 +151,20 @@ export const startUpdateUserData = (userData) => {
 export const startLoadUserData = () => {
   return async (dispatch) => {
     try {
+      console.log("startLoadUserData - START")
+      // console.log(database)
+      // console.log(auth.currentUser.uid)
       const userDocRef = doc(database, "Users", auth.currentUser.uid);
+      console.log("doc works")
+      console.log("uid: " + auth.currentUser.uid)
       const userDoc = await getDoc(userDocRef);
+      console.log("getDoc works")
+      console.log(userDoc)
 
       if (userDoc.exists()) {
+        console.log("userDoc exists")
         const userDataFromFirebase = userDoc.data();
+        console.log("useDoc.data() works")
         dispatch(updateUserMetricsData(userDataFromFirebase));
         console.log("User data loaded from database successfully!");
       } else {
@@ -191,14 +206,17 @@ export const startSignupWithEmail = (email, password, firstName, lastName) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        // console.log("User created successfully!");
-        // console.log(user);
+        console.log("User created successfully!");
+        console.log(user);
 
         // After creating User, Adding First and Last Name to User Profile
         dispatch(startUpdateProfile(firstName, lastName));
 
+        console.log("dispatch startUpdateProfile()");
         // After creating User, Adding User Data to Database, so showing userMetricsDataModal component
         dispatch(userMetricsDataModalVisible(true, true));
+
+        console.log("dispatch userMetricsDataModalVisible");
 
         dispatch(
           signupWithEmail({
@@ -208,8 +226,11 @@ export const startSignupWithEmail = (email, password, firstName, lastName) => {
             email: user.email,
           })
         );
+        console.log("dispatch signupWithEmail");
       })
       .catch((error) => {
+        console.log(error);
+        console.log(error.code);
         dispatch(toastError(firebaseErrorsMessages[error.code]));
       });
   };
