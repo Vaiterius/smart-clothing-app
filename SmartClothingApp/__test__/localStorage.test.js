@@ -1,5 +1,5 @@
 // Import the functions and AsyncStorage
-import { storeUID, getUID } from '../src/utils/localStorage.js'; // Update the path to where your functions are located
+import { storeUID, getUID, storeMetrics, getMetrics } from '../src/utils/localStorage.js'; // Update the path to where your functions are located
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Mock AsyncStorage
@@ -62,6 +62,51 @@ describe('AsyncStorage', () => {
       expect(console.error).toHaveBeenCalledWith('Error getting user UID:', error);
       // Check that the returned UID is undefined due to the error
       expect(storedUID).toBeUndefined();
+    });
+  });
+
+  describe('storeMetrics', () => {
+    it('should store the metrics successfully', async () => {
+      const metrics = { weight: 70, height: 175 }; // example metrics data
+      await storeMetrics(metrics);
+
+      expect(AsyncStorage.setItem).toHaveBeenCalledTimes(1);
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('metricsData', JSON.stringify(metrics));
+    });
+
+    it('should handle the error if storing fails', async () => {
+      const error = new Error('storage error');
+      AsyncStorage.setItem.mockImplementation(() => Promise.reject(error));
+      console.error = jest.fn();
+
+      await storeMetrics({ weight: 70, height: 175 });
+
+      expect(console.error).toHaveBeenCalledWith('Error storing user metrics:', error);
+    });
+  });
+
+  describe('getMetrics', () => {
+    it('should return the metrics if they exist', async () => {
+      const metrics = { weight: 70, height: 175 };
+      AsyncStorage.getItem.mockResolvedValue(JSON.stringify(metrics));
+
+      const storedMetrics = await getMetrics();
+
+      expect(AsyncStorage.getItem).toHaveBeenCalledTimes(1);
+      expect(AsyncStorage.getItem).toHaveBeenCalledWith('metricsData');
+      expect(storedMetrics).toEqual(metrics);
+    });
+
+    it('should handle the error if retrieving fails', async () => {
+      const error = new Error('retrieval error');
+      AsyncStorage.getItem.mockImplementation(() => Promise.reject(error));
+      console.error = jest.fn();
+
+      const storedMetrics = await getMetrics();
+
+      expect(AsyncStorage.getItem).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Error getting user metrics:', error);
+      expect(storedMetrics).toBeFalsy();
     });
   });
 });
