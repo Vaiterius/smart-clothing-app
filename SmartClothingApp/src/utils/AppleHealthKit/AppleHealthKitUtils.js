@@ -60,6 +60,7 @@ export const getHeartRateData = async () => {
   } catch (error) {
     console.error('Error retrieving heart rate data:', error);
     // Handle the error appropriately (e.g., show a message to the user)
+    throw error;
   }
 };
 
