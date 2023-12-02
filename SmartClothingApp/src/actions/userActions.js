@@ -5,7 +5,11 @@ import {
   doc,
   updateDoc,
   getDoc,
+  getFirestore,
+  deleteDoc,
 } from "firebase/firestore";
+
+import { storeUID } from "../utils/localStorage.js";
 
 import { auth, database } from "../../firebaseConfig.js";
 import { firebaseErrorsMessages } from "../utils/firebaseErrorsMessages.js";
@@ -15,6 +19,10 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   sendPasswordResetEmail,
+  updateEmail,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
 } from "firebase/auth";
 
 import {
@@ -23,6 +31,8 @@ import {
   LOGOUT,
   UPDATE_PROFILE,
   UPDATE_USER_METRICS_DATA,
+  UPDATE_EMAIL_SUCCESS,
+  UPDATE_PASSWORD_SUCCESS,
 } from "./types";
 
 import { toastError } from "./toastActions.js";
@@ -55,6 +65,13 @@ const logout = () => {
   };
 };
 
+// password
+export const updatePasswordSuccess = () => {
+  return {
+    type: UPDATE_PASSWORD_SUCCESS,
+  };
+};
+
 export const startLogout = () => {
   return (dispatch) => {
     auth
@@ -78,6 +95,11 @@ export const startLogout = () => {
 //   });
 
 export const startUpdateProfile = (firstName, lastName) => {
+  // remove spaces from first and last name
+  firstName = firstName.replace(/\s/g, "");
+  lastName = lastName.replace(/\s/g, "");
+
+  console.log("startUpdateProfile()")
   return (dispatch) => {
     updateProfile(auth.currentUser, {
       displayName: `${firstName} ${lastName}`,
@@ -85,6 +107,7 @@ export const startUpdateProfile = (firstName, lastName) => {
       .then(() => {
         console.log(auth.currentUser);
         dispatch(updateProfileInfo(firstName, lastName));
+        console.log("updateProfileInfo()")
       })
       .catch((error) => {
         console.log(error);
@@ -97,6 +120,13 @@ export const updateUserMetricsData = (userMetricsData) => {
   return {
     type: UPDATE_USER_METRICS_DATA,
     payload: userMetricsData,
+  };
+};
+
+export const updateEmailData = (newEmail) => {
+  return {
+    type: UPDATE_EMAIL_SUCCESS,
+    payload: newEmail,
   };
 };
 
@@ -117,23 +147,24 @@ export const startUpdateUserData = (userData) => {
 export const startLoadUserData = () => {
   return async (dispatch) => {
     try {
+      console.log("startLoadUserData - START")
+      // console.log(database)
+      // console.log(auth.currentUser.uid)
       const userDocRef = doc(database, "Users", auth.currentUser.uid);
+      console.log("doc works")
+      console.log("uid: " + auth.currentUser.uid)
       const userDoc = await getDoc(userDocRef);
+      console.log("getDoc works")
+      console.log(userDoc)
 
       if (userDoc.exists()) {
+        console.log("userDoc exists")
         const userDataFromFirebase = userDoc.data();
+        console.log("useDoc.data() works")
         dispatch(updateUserMetricsData(userDataFromFirebase));
         console.log("User data loaded from database successfully!");
       } else {
         console.log("User data doesn't exist in the database!");
-        const defaultUserData = {
-          height: "",
-          weight: "",
-          age: "",
-          gender: "",
-          sports: "",
-        };
-        dispatch(startUpdateUserData(defaultUserData, auth.currentUser.uid));
       }
     } catch (e) {
       console.log("Error loading user data from database!");
@@ -171,14 +202,17 @@ export const startSignupWithEmail = (email, password, firstName, lastName) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        // console.log("User created successfully!");
-        // console.log(user);
+        console.log("User created successfully!");
+        console.log(user);
 
         // After creating User, Adding First and Last Name to User Profile
         dispatch(startUpdateProfile(firstName, lastName));
 
+        console.log("dispatch startUpdateProfile()");
         // After creating User, Adding User Data to Database, so showing userMetricsDataModal component
-        dispatch(userMetricsDataModalVisible(true));
+        dispatch(userMetricsDataModalVisible(true, true));
+
+        console.log("dispatch userMetricsDataModalVisible");
 
         dispatch(
           signupWithEmail({
@@ -188,20 +222,26 @@ export const startSignupWithEmail = (email, password, firstName, lastName) => {
             email: user.email,
           })
         );
+        console.log("dispatch signupWithEmail");
       })
       .catch((error) => {
+        console.log(error);
         dispatch(toastError(firebaseErrorsMessages[error.code]));
       });
   };
 };
 
 export const startLoginWithEmail = (email, password) => {
+  console.log(email)
+  console.log(password)
   return (dispatch) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        // console.log("Logged in successfully!");
-        // console.log(user);
+
+        storeUID(user.uid); // store the user UID securely in local storages
+        console.log("Logged in successfully!");
+        console.log(user);
 
         // load the user data from the database
         dispatch(startLoadUserData());
@@ -246,4 +286,87 @@ export const startSnedPasswordReserEmail = (email) => {
       console.log(error);
       // console.log("###### Error sending password reset email!");
     });
+};
+
+// export const reauthenticate = (currentPassword) => {
+//   const user = auth.currentUser;
+//   const cred = EmailAuthProvider.credential(user.email, currentPassword);
+//   try {
+//     reauthenticateWithCredential(user, cred);
+//     dispatch(setReauthenticationStatus(true));
+//     console.log("Reauthentication success");
+//   } catch (error) {
+//     dispatch(toastError(firebaseErrorsMessages[error.code]));
+//     dispatch(setReauthenticationStatus(false));
+//   }
+// };
+
+export const reauthenticate = (currentPassword) => {
+  return async (dispatch) => {
+    try {
+      const user = auth.currentUser;
+      const cred = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, cred);
+      console.log("Reauthentication success");
+      return true;
+    } catch (error) {
+      dispatch(toastError(firebaseErrorsMessages[error.code]));
+      console.log("Reauthentication failure");
+      return false;
+    }
+  };
+};
+
+export const updateUserPassword = (newPassword) => {
+  return (dispatch) => {
+    const user = auth.currentUser;
+    try {
+      updatePassword(user, newPassword);
+      console.log("Password update success");
+    } catch (error) {
+      dispatch(toastError(firebaseErrorsMessages[error.code]));
+      console.log("Password update failure");
+    }
+  };
+};
+
+export const updateUserEmail = (newEmail) => {
+  return (dispatch) => {
+    const user = auth.currentUser;
+    if (user) {
+      updateEmail(user, newEmail)
+        .then(() => {
+          dispatch(updateEmailData(newEmail));
+          console.log("Email update success.");
+        })
+        .catch((error) => {
+          dispatch(toastError(firebaseErrorsMessages[error.code]));
+          return false;
+        });
+    }
+  };
+};
+
+export const deleteAccount = () => {
+  return async (dispatch) => {
+    try {
+      const user = auth.currentUser;
+      const uid = user.uid;
+      const docRef = doc(database, "Users", uid);
+
+      await user.delete();
+      console.log("User deleted successfully.");
+
+      await deleteDoc(docRef);
+      console.log("Document deleted successfully.");
+
+      await auth.signOut();
+      dispatch(logout());
+      dispatch(toastError("User account has been deleted"));
+      console.log("User signed out successfully.");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      dispatch(toastError(error.message || "An error occurred."));
+    }
+  };
 };
