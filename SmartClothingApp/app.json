@@ -41,6 +41,8 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
+        "android.permission.health.READ_HEART_RATE",
+        "android.permission.health.WRITE_HEART_RATE",
         "android.permission.health.READ_STEPS",
         "android.permission.health.WRITE_STEPS"
       ]
