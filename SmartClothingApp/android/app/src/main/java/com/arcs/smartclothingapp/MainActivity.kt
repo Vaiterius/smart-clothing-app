@@ -5,7 +5,10 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
@@ -20,27 +23,42 @@ import expo.modules.BuildConfig
 import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
-
-
+    private val PERMISSIONS = setOf(
+        HealthPermission.getReadPermission(HeartRateRecord::class),
+        HealthPermission.getWritePermission(HeartRateRecord::class),
+        HealthPermission.getReadPermission(StepsRecord::class),
+        HealthPermission.getWritePermission(StepsRecord::class)
+    )
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set the theme to AppTheme BEFORE onCreate to support 
         // coloring the background, status bar, and navigation bar.
         // This is required for expo-splash-screen.
         setTheme(R.style.AppTheme)
-        super.onCreate(null)
+        super.onCreate(savedInstanceState)
+        Log.println(Log.DEBUG, "debug", "made it to oncreate")
+        requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+                if (it) {
 
-        val healthConnClient = checkIfHealthConnectIsInstalled()
-        if (healthConnClient == null) {
-            Toast.makeText(this, "health connect must be installed", Toast.LENGTH_LONG).show()
-        }
+                }
+        /*val healthConnectManager = checkIfHealthConnectIsInstalled()
+        if (healthConnectManager == null)
+        {
+            Toast.makeText(this, "no health connect installed", Toast.LENGTH_LONG)
+        } else {
+            myFun(healthConnectManager)
+        }*/
     }
 
-    private fun checkIfHealthConnectIsInstalled(): HealthConnectClient? {
+    private fun checkIfHealthConnectIsInstalled(): HealthConnectClient {
         val providerPackageName = "com.google.android.apps.healthdata"
         val availabilityStatus = HealthConnectClient.getSdkStatus(this, providerPackageName)
         if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE) {
-            return null// early return as there is no viable integration
+            return HealthConnectClient.getOrCreate(this)// early return as there is no viable integration
+            //may be a bad thing to get on a non existing SDK
+            //I did this because I need a HealthConnectClient type and cant use a nullable
         }
         if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
             // Optionally redirect to package installer to find a provider, for example:
@@ -54,37 +72,34 @@ class MainActivity : ReactActivity() {
                     putExtra("callerId", this@MainActivity.packageName)
                 }
             )
-            return null
+            return HealthConnectClient.getOrCreate(this)
         }
         return HealthConnectClient.getOrCreate(this)
         // Issue operations with healthConnectClient
     }
 
-private fun checkPermissionsAndRun(healthConnectClient: HealthConnectClient) {
-    val PERMISSIONS = setOf(
-        HealthPermission.getReadPermission(HeartRateRecord::class),
-        HealthPermission.getWritePermission(HeartRateRecord::class),
-        HealthPermission.getReadPermission(StepsRecord::class),
-        HealthPermission.getWritePermission(StepsRecord::class)
-    )
-    try {
-        // Create the permissions launcher
-        val requestPermissionActivityContract =
-            PermissionController.createRequestPermissionResultContract()
+    private fun myFun(healthConnectionClient: HealthConnectClient) {
+        val requestPermissionActivityContract = PermissionController.createRequestPermissionResultContract()
+        val requestPermissions = registerForActivityResult(requestPermissionActivityContract) { granted ->
+            if (granted.containsAll(PERMISSIONS)) {
+                // Permissions successfully granted
 
-        val requestPermissions =
-            registerForActivityResult(requestPermissionActivityContract) { granted ->
-                if (granted.containsAll(PERMISSIONS)) {
-                    Toast.makeText(this, "success", Toast.LENGTH_SHORT).show()
-                    //checkPermissionsAndRun(healthConnectClient: HealthConnectClient)
-                } else {
-                    Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show()
-                }
+            } else {
+                // Lack of required permissions
+                Toast.makeText(this, "please enable permissions", Toast.LENGTH_LONG).show()
             }
-    } catch (e: Exception) {
-        Toast.makeText(this, "fail", Toast.LENGTH_SHORT).show()
+        }
+
     }
-}
+
+    suspend fun checkPermissionsAndRun(healthConnectClient: HealthConnectClient) {
+        val granted = healthConnectClient.permissionController.getGrantedPermissions()
+        if (granted.containsAll(PERMISSIONS)) {
+            // Permissions already granted; proceed with inserting or reading data
+        } else {
+            requestPermissions.launch(PERMISSIONS)
+        }
+    }
 
     /**
      * Returns the name of the main component registered from JavaScript.
