@@ -10,8 +10,43 @@ import { useAppFonts } from "./src/hooks/useAppFonts";
 import { AppTheme } from "./src/constants/themes";
 import configureStore from "./src/store";
 import { AppToast } from "./src/components";
+import {
+  initialize,
+  requestPermission,
+  readRecords,
+  getSDKStatus,
+  SdkAvailabilityStatus,
+} from 'react-native-health-connect';
 
 const store = configureStore();
+
+/* const askForPermission = () => {
+  getSDKStatus().then(status => {
+    console.log('status', status);
+    console.log(SdkAvailabilityStatus.SDK_AVAILABLE, SdkAvailabilityStatus.SDK_UNAVAILABLE, SdkAvailabilityStatus.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED);
+    if (status === SdkAvailabilityStatus.SDK_AVAILABLE) {
+      console.log('SDK is available');
+    }
+    if (status === SdkAvailabilityStatus.SDK_UNAVAILABLE) {
+      console.log('SDK is not available');
+    }
+    if (
+      status === SdkAvailabilityStatus.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED
+    ) {
+      console.log('SDK is not available, provider update required');
+    }
+  });
+
+  initialize().then(isInitialized => {
+    console.log('isInitialized', isInitialized);
+    requestPermission([
+      { accessType: 'read', recordType: 'HeartRate' },
+      { accessType: 'read', recordType: 'Steps' },
+    ]).then(grantedPermissions => {
+      console.log('grantedPermissions', grantedPermissions);
+    });
+  });
+}; */
 
 export default function App() {
   const [isLoading, setLoading] = useState(true);
@@ -24,6 +59,7 @@ export default function App() {
     };
     loadFont();
 
+    /* askForPermission(); */
     // // Check if there's a stored token on app launch
     // const checkToken = async () => {
     //   try {

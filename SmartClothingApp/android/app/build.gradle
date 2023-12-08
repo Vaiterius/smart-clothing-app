@@ -191,9 +191,14 @@ android {
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
+    def composeBom = platform('androidx.compose:compose-bom:2022.10.00')
+    implementation(composeBom)
     implementation("com.facebook.react:react-android")
     implementation 'androidx.core:core-ktx:+'
     implementation "androidx.health.connect:connect-client:1.1.0-alpha06"
+    def lifecycle_version = "2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
