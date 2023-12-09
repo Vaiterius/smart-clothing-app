@@ -271,19 +271,6 @@ export const startSnedPasswordReserEmail = (email) => {
     });
 };
 
-// export const reauthenticate = (currentPassword) => {
-//   const user = auth.currentUser;
-//   const cred = EmailAuthProvider.credential(user.email, currentPassword);
-//   try {
-//     reauthenticateWithCredential(user, cred);
-//     dispatch(setReauthenticationStatus(true));
-//     console.log("Reauthentication success");
-//   } catch (error) {
-//     dispatch(toastError(firebaseErrorsMessages[error.code]));
-//     dispatch(setReauthenticationStatus(false));
-//   }
-// };
-
 export const reauthenticate = (currentPassword) => {
   return async (dispatch) => {
     try {
@@ -350,6 +337,36 @@ export const deleteAccount = () => {
     } catch (error) {
       console.error("Error deleting account:", error);
       dispatch(toastError(error.message || "An error occurred."));
+    }
+  };
+};
+
+export const updateHealthData = () => {
+  return async (dispatch) => {
+    try {
+      const userDocRef = doc(database, "Users", auth.currentUser.uid);
+
+      // Create a new collection (e.g., HeartRateData) inside the Users document
+      const heartRateCollectionRef = collection(userDocRef, "HeartRateData");
+
+      // Add sample data to the new collection
+      const sampleHeartRateData = [
+        { date: new Date("2023-12-07T04:31:00.000Z"), heartRate: 50 },
+        { date: new Date("2023-12-07T04:31:00.000Z"), heartRate: 99 },
+        { date: new Date("2023-12-07T04:31:00.000Z"), heartRate: 77 },
+      ];
+
+      // Loop through the sample data and add it to the HeartRateData collection
+      for (const data of sampleHeartRateData) {
+        const heartRateDocRef = doc(heartRateCollectionRef); // Automatically generates a unique document ID
+        await setDoc(heartRateDocRef, data);
+      }
+
+      console.log(
+        "Sample heart rate data added to HeartRateData collection successfully!"
+      );
+    } catch (e) {
+      console.error("Error updating health data:", e);
     }
   };
 };

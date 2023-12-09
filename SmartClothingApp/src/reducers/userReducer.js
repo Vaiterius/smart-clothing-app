@@ -20,6 +20,8 @@ const initialState = {
     weight: "No Data",
     sports: "No Data",
   },
+  heartRateData: [],
+  sleepData: [],
 };
 
 const userReducer = (state = initialState, action) => {

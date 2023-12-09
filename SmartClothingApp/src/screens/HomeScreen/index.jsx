@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Button, Text } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 import DailyInsights from "../../components/DailyInsights/DailyInsights";
+import { updateHealthData } from "../../actions/userActions.js";
 
 import {
   ActivityCard,
@@ -17,6 +18,7 @@ import {
 import { AppColor, AppFonts, AppStyle } from "../../constants/themes.js";
 
 export default function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
   const route = useRoute();
   const navigate = (screen) => {
     navigation.navigate(screen, {
@@ -27,6 +29,13 @@ export default function HomeScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <AppHeader title={"Dashboard"} />
+      <Button
+        style={{ width: 200 }}
+        mode="contained"
+        onPress={() => dispatch(updateHealthData())}
+      >
+        Click Me
+      </Button>
       <DataCollectModal />
       <View style={styles.body}>
         <Text style={AppStyle.title}>Hello, {firstName}</Text>
