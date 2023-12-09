@@ -1,6 +1,8 @@
 package com.arcs.smartclothingapp
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContract
@@ -39,8 +41,13 @@ const val MIN_SUPPORTED_SDK = Build.VERSION_CODES.O_MR1
 class HealthConnectManager(private val context: Context) {
     private val healthConnectClient by lazy { HealthConnectClient.getOrCreate(context) }
 
-    var availability = mutableStateOf(HealthConnectAvailability.NOT_SUPPORTED)
+    private var availability = mutableStateOf(HealthConnectAvailability.NOT_SUPPORTED)
         private set
+
+    val permissions = setOf(
+        HealthPermission.getReadPermission(HeartRateRecord::class),
+        HealthPermission.getReadPermission(StepsRecord::class)
+    )
 
     init {
         checkAvailability()
@@ -69,13 +76,6 @@ class HealthConnectManager(private val context: Context) {
     }
 
     /**
-     * TODO: Writes [WeightRecord] to Health Connect.
-     */
-    suspend fun writeWeightInput(weightInput: Double) {
-        Toast.makeText(context, "TODO: write weight input", Toast.LENGTH_SHORT).show()
-    }
-
-    /**
      * TODO: Reads in existing [WeightRecord]s.
      */
     suspend fun readWeightInputs(start: Instant, end: Instant): List<WeightRecord> {
@@ -92,21 +92,6 @@ class HealthConnectManager(private val context: Context) {
     }
 
     /**
-     * TODO: Obtains a list of [ExerciseSessionRecord]s in a specified time frame.
-     */
-    suspend fun readExerciseSessions(start: Instant, end: Instant): List<ExerciseSessionRecord> {
-        // Toast.makeText(context, "TODO: read exercise sessions", Toast.LENGTH_SHORT).show()
-        return emptyList()
-    }
-
-    /**
-     * TODO: Writes an [ExerciseSessionRecord] to Health Connect.
-     */
-    suspend fun writeExerciseSession(start: ZonedDateTime, end: ZonedDateTime) {
-        Toast.makeText(context, "TODO: write exercise session", Toast.LENGTH_SHORT).show()
-    }
-
-    /**
      * TODO: Build [HeartRateRecord].
      */
     private fun buildHeartRateSeries(
@@ -114,30 +99,6 @@ class HealthConnectManager(private val context: Context) {
         sessionEndTime: ZonedDateTime,
     ): HeartRateRecord {
         TODO()
-    }
-
-    /**
-     * TODO: Reads aggregated data and raw data for selected data types, for a given [ExerciseSessionRecord].
-     */
-    suspend fun readAssociatedSessionData(
-        uid: String,
-    ): ExerciseSessionData {
-        TODO()
-    }
-
-    /**
-     * TODO: Obtains a changes token for the specified record types.
-     */
-    suspend fun getChangesToken(): String {
-        Toast.makeText(context, "TODO: get changes token", Toast.LENGTH_SHORT).show()
-        return String()
-    }
-
-    /**
-     * TODO: Retrieve changes from a changes token.
-     */
-    suspend fun getChanges(token: String): Flow<ChangesMessage> = flow {
-        Toast.makeText(context, "TODO: get new changes", Toast.LENGTH_SHORT).show()
     }
 
     /**

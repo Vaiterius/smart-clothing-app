@@ -1,7 +1,10 @@
 package com.arcs.smartclothingapp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import androidx.health.connect.client.HealthConnectClient
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.concurrentReactEnabled
@@ -16,6 +19,7 @@ class MainActivity : ReactActivity() {
         // This is required for expo-splash-screen.
         setTheme(R.style.AppTheme)
         super.onCreate(null)
+
     }
 
     /**
