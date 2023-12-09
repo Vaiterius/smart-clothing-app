@@ -192,9 +192,11 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    /*added health connect implementation, out of date version because its whats described in the
-    * tutorial from Google safe update will be conducted later*/
-    implementation "androidx.health.connect:connect-client:1.1.0-alpha02"
+    implementation 'androidx.core:core-ktx:+'
+    implementation "androidx.health.connect:connect-client:1.1.0-alpha06"
+    def lifecycle_version = "2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
@@ -236,5 +238,6 @@ dependencies {
     }
 }
 
-apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute(null, rootDir).text.trim(), "../native_modules.gradle");
+apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute(null, rootDir).text.trim(), "../native_modules.gradle")
+apply plugin: 'org.jetbrains.kotlin.android';
 applyNativeModulesAppBuildGradle(project)
