@@ -10,13 +10,7 @@ import { useAppFonts } from "./src/hooks/useAppFonts";
 import { AppTheme } from "./src/constants/themes";
 import configureStore from "./src/store";
 import { AppToast } from "./src/components";
-import {
-  initialize,
-  requestPermission,
-  readRecords,
-  getSDKStatus,
-  SdkAvailabilityStatus,
-} from 'react-native-health-connect';
+import { HealthConnect } from "./Utils/HealthConnect.js"
 
 const store = configureStore();
 
@@ -50,7 +44,8 @@ const store = configureStore();
 
 export default function App() {
   const [isLoading, setLoading] = useState(true);
-
+  const healthConn = new HealthConnect();
+  healthConn.initalizeHealthConnect();
   useEffect(() => {
     // Loading fonts
     const loadFont = async () => {
