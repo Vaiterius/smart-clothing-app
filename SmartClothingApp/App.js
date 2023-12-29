@@ -18,8 +18,34 @@ import {
   updateUserMetricsData,
 } from "./src/actions/userActions.js";
 import SplashScreen from "react-native-splash-screen";
+import {
+  initialize,
+  requestPermission,
+  readRecords,
+} from 'react-native-health-connect';
+
 
 const store = configureStore();
+
+const readSampleData = async () => {
+  // initialize the client
+  const isInitialized = await initialize();
+
+  // request permissions
+  const grantedPermissions = await requestPermission([
+    { accessType: 'read', recordType: 'ActiveCaloriesBurned' },
+  ]);
+
+  // check if granted
+
+  const result = await readRecords('ActiveCaloriesBurned', {
+    timeRangeFilter: {
+      operator: 'between',
+      startTime: '2023-01-09T12:00:00.405Z',
+      endTime: '2023-01-09T23:53:15.405Z',
+    },
+  });
+}
 
 export default function App() {
   const [isLoading, setLoading] = useState(true);
@@ -29,6 +55,15 @@ export default function App() {
   //     SplashScreen.hide();
   //   }
   // }, []);
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+        readSampleData();
+      }
+    }, []);
+
+
+  
 
   useEffect(() => {
     console.log("from App.js: Auth.currentUser is -->", auth.currentUser);

@@ -3,7 +3,6 @@
     "name": "SmartClothingApp",
     "slug": "SmartClothingApp",
     "version": "1.0.0",
-    // "owner": "arcs", // it was causing "ApiV2Error: Entity Not Authorized." expo app error, so temporarily removed it
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,6 +12,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": ["react-native-health-connect",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "permissions": [
+              "android.permission.health.READ_STEPS",
+              "android.permission.health.WRITE_STEPS",
+              "android.permission.health.READ_ACTIVE_CALORIES_BURNED"
+            ],
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 26
+          }
+        }
+      ]],
     "assetBundlePatterns": [
       "**/*"
     ],
