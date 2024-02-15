@@ -40,6 +40,33 @@ export default function ViewHealthData({ navigation }) {
         navigate={navigate}
         solid
       />
+
+      <DataButton
+        screen="SprintData"
+        icon="running"
+        color={AppColor.primary}
+        dataText="Sprint & Distance"
+        navigate={navigate}
+        solid
+      />
+
+      <DataButton
+        screen="StepData"
+        icon="shoe-prints"
+        color={AppColor.primary}
+        dataText="Step"
+        navigate={navigate}
+        solid
+      />
+
+      <DataButton
+        screen="BikeData"
+        icon="bicycle"
+        color={AppColor.primary}
+        dataText="Biking"
+        navigate={navigate}
+        solid
+      />
     </ScrollView>
   );
 }

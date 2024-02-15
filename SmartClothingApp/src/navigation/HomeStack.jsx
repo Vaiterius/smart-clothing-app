@@ -12,6 +12,9 @@ import {
   ViewInsights,
   ViewHeartRateData,
   ViewSleepData,
+  ViewStepData,
+  ViewSprintData,
+  ViewBikingData,
 } from "../screens";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -129,6 +132,9 @@ const HealthNavigationStack = () => {
       <Stack.Screen name="Health Data" component={ViewHealthData} />
       <Stack.Screen name="HeartRateData" component={ViewHeartRateData} />
       <Stack.Screen name="SleepData" component={ViewSleepData} />
+      <Stack.Screen name="SprintData" component={ViewSprintData} />
+      <Stack.Screen name="StepData" component={ViewStepData} />
+      <Stack.Screen name="BikeData" component={ViewBikingData} />
     </Stack.Navigator>
   );
 };

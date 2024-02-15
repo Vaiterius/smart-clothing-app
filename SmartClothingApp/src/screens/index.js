@@ -11,6 +11,9 @@ import ViewHealthData from "./ViewHealthData";
 import ViewInsights from "./ViewInsights";
 import ViewHeartRateData from "./ViewHeartRateData";
 import ViewSleepData from "./ViewSleepData";
+import ViewSprintData from "./ViewSprintData";
+import ViewStepData from "./ViewStepData";
+import ViewBikingData from "./ViewBikingData";
 
 export {
   HomeScreen,
@@ -26,4 +29,7 @@ export {
   DeviceDetails,
   ViewHeartRateData,
   ViewSleepData,
+  ViewSprintData,
+  ViewStepData,
+  ViewBikingData,
 };
