@@ -1,10 +1,9 @@
 package com.arcs.smartclothingapp
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.health.connect.client.HealthConnectClient
+import android.util.Log
+import androidx.compose.runtime.getValue
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.concurrentReactEnabled
@@ -13,13 +12,20 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 import expo.modules.ReactActivityDelegateWrapper
 
 class MainActivity : ReactActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Set the theme to AppTheme BEFORE onCreate to support 
         // coloring the background, status bar, and navigation bar.
         // This is required for expo-splash-screen.
         setTheme(R.style.AppTheme)
         super.onCreate(null)
+        val healthConnectManager by lazy { HealthConnectManager(this) }
+        val permissions by lazy { healthConnectManager.hasAllPermissions(healthConnectManager.permissions) }
+        val availability by healthConnectManager.availability
+        Log.i("AVAILABILITY", availability.toString())
+        if (!permissions) {
 
+        }
     }
 
     /**

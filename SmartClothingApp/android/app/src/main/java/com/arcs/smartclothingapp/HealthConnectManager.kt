@@ -1,36 +1,27 @@
 package com.arcs.smartclothingapp
 
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.runtime.mutableStateOf
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.HealthConnectClient.Companion.SDK_AVAILABLE
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.changes.Change
 import androidx.health.connect.client.permission.HealthPermission
-import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.records.StepsRecord
-import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.metadata.DataOrigin
-import androidx.health.connect.client.request.AggregateRequest
-import androidx.health.connect.client.request.ChangesTokenRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
-import androidx.health.connect.client.units.Energy
 import androidx.health.connect.client.units.Mass
-import java.io.IOException
 import java.time.Instant
 import java.time.ZonedDateTime
-import kotlin.random.Random
-import kotlin.reflect.KClass
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 // The minimum android level that can use Health Connect
 const val MIN_SUPPORTED_SDK = Build.VERSION_CODES.O_MR1
@@ -41,19 +32,27 @@ const val MIN_SUPPORTED_SDK = Build.VERSION_CODES.O_MR1
 class HealthConnectManager(private val context: Context) {
     private val healthConnectClient by lazy { HealthConnectClient.getOrCreate(context) }
 
-    private var availability = mutableStateOf(HealthConnectAvailability.NOT_SUPPORTED)
+    var availability = mutableStateOf(HealthConnectAvailability.NOT_SUPPORTED)
         private set
+
+    init {
+        checkAvailability()
+    }
 
     val permissions = setOf(
         HealthPermission.getReadPermission(HeartRateRecord::class),
         HealthPermission.getReadPermission(StepsRecord::class)
     )
 
-    init {
-        checkAvailability()
+    suspend fun hasAllPermissions(permissions: Set<String>): Boolean {
+        return healthConnectClient.permissionController.getGrantedPermissions().containsAll(permissions)
     }
 
-    fun checkAvailability() {
+    suspend fun requestPermissionsActivityContract(): ActivityResultContract<Set<String>, Set<String>> {
+        return PermissionController.createRequestPermissionResultContract()
+    }
+
+    private fun checkAvailability() {
         availability.value = when {
             HealthConnectClient.getSdkStatus(context) == SDK_AVAILABLE -> HealthConnectAvailability.INSTALLED
             isSupported() -> HealthConnectAvailability.NOT_INSTALLED
@@ -67,13 +66,19 @@ class HealthConnectManager(private val context: Context) {
      * permissions are already granted then there is no need to request permissions via
      * [PermissionController.createRequestPermissionResultContract].
      */
-    suspend fun hasAllPermissions(permissions: Set<String>): Boolean {
-        return healthConnectClient.permissionController.getGrantedPermissions().containsAll(permissions)
-    }
-
-    fun requestPermissionsActivityContract(): ActivityResultContract<Set<String>, Set<String>> {
-        return PermissionController.createRequestPermissionResultContract()
-    }
+/*    fun requestPermissions() {
+        val requestPermissions = registerForActivityResult(
+            permissionController.createRequestPermissionResultContract()
+        ) {
+            grantedPermissions ->
+            if (grantedPermissions.containsAll(permissions)) {
+                //granted
+            } else {
+                //permission denied
+            }
+        }
+        requestPermissions.launch(permissions)
+    }*/
 
     /**
      * TODO: Reads in existing [WeightRecord]s.

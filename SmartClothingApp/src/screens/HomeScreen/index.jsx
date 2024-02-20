@@ -10,9 +10,26 @@ import {
 } from "../../components";
 import { Button, Text } from "react-native-paper";
 import { AppColor, AppFonts, AppStyle } from "../../constants/themes.js";
+import { initialize, requestPermission, insertRecords } from "react-native-health-connect";
 
 export default function HomeScreen({ navigation }) {
+  
   const firstName = useSelector((state) => state.user.firstName);
+  const insertSampleData = async () => {
+    const isInitalized = await initialize();
+    const grantedPermissions = await requestPermission([
+      {accessType: 'insert', recordType: 'Steps'},
+    ]);
+    insertRecords({
+        recordType: "StepsCount",
+        startTime: "2024-01-25T08:00:00.000Z",
+        endTime: "2024-01-25T09:00:00.000Z",
+        steps: 5000,
+      }).then((response) => {
+        console.log(response.result);
+      }).catch((error) => console.error(error));
+    }
+    
   return (
     <ScrollView style={styles.container}>
       <AppHeader title={"Dashboard"} />

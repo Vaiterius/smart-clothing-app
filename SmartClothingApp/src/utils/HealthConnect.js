@@ -7,7 +7,7 @@ import {
     readRecords
  } from "react-native-health-connect";
 
-class HealthConnect {
+export class HealthConnect {
     initalizeHealthConnect = async () => {
         const isInitialized = await initialize();
         console.log({ isInitialized });
